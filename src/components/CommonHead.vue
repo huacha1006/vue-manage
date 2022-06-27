@@ -6,7 +6,16 @@
         icon="el-icon-menu"
         size="mini"
       ></el-button>
-      <h3 style="color: white">首页</h3>
+      <el-breadcrumb style="color: red" separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item
+          style="color: red"
+          v-for="item in tags"
+          :key="item.path"
+          :to="{ path: item.path }"
+        >
+          {{ item.label }}</el-breadcrumb-item
+        >
+      </el-breadcrumb>
     </div>
     <div class="r-content">
       <el-dropdown trigger="click" size="mini">
@@ -14,17 +23,15 @@
           <img class="user" :src="userImg" />
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>黄金糕</el-dropdown-item>
-          <el-dropdown-item>狮子头</el-dropdown-item>
-          <el-dropdown-item>螺蛳粉</el-dropdown-item>
-          <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-          <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
+          <el-dropdown-item>个人中心</el-dropdown-item>
+          <el-dropdown-item @click.native="logOut">退出登陆</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
   </header>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
   name: "CommonHead",
   data() {
@@ -36,6 +43,16 @@ export default {
     changeMenu() {
       this.$store.commit("collapseMenu");
     },
+    logOut() {
+      this.$store.commit("clearToken");
+      this.$store.commit("clearMenu");
+      this.$router.push("/login");
+    },
+  },
+  computed: {
+    ...mapState({
+      tags: (state) => state.tab.tabsList,
+    }),
   },
 };
 </script>
